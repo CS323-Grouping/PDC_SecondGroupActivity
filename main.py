@@ -65,6 +65,20 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid input. Please enter T or F.")
+            
+    # If logging is enabled and there are multiple runs, ask if they want to mute subsequent runs
+    mute_subsequent_runs = True
+    if enable_logging and runs_for_average > 1:
+        while True:
+            m = input("Mute detailed logging for subsequent runs to keep output clean (T/F)? ")
+            if m.lower() == 't':
+                mute_subsequent_runs = True
+                break
+            elif m.lower() == 'f':
+                mute_subsequent_runs = False
+                break
+            else:
+                print("Invalid input. Please enter T or F.")
 
     total_sq = 0
     total_pr = 0
@@ -83,10 +97,13 @@ if __name__ == "__main__":
         run_number = i + 1
         print(f"\n>>>>> STARTED BENCHMARK RUN {run_number} OF {runs_for_average} <<<<<")
         
-        # Only print the detailed logs for the first run if logging is enabled
-        log_this_run = enable_logging if i == 0 else False
+        # Determine if this specific run should print detailed logs
+        if enable_logging:
+            log_this_run = False if (mute_subsequent_runs and i > 0) else True
+        else:
+            log_this_run = False
         
-        if enable_logging and not log_this_run:
+        if enable_logging and mute_subsequent_runs and i > 0:
             print("(Detailed process logging muted for this run to keep output clean)")
         
         base_queue = generate_students(p1_count, p2_count, p3_count)
@@ -101,26 +118,37 @@ if __name__ == "__main__":
         total_pr += par_time
         par_run_times.append(par_time)
         
-        print(f">>>>> COMPLETED BENCHMARK RUN {run_number} <<<<<")
+        print(f">>>>> COMPLETED BENCHMARK RUN {run_number} <<<<<\n")
 
     time_sq = total_sq / runs_for_average
     time_pr = total_pr / runs_for_average
     speedup = time_sq / time_pr
 
+    # ==========================================
+    # FORMATTED UNIFORM PERFORMANCE SUMMARY TABLE
+    # ==========================================
     print("\n" + "="*60)
-    print("                 PERFORMANCE SUMMARY                 ")
+    print(f"{'PERFORMANCE SUMMARY':^60}")
     print("="*60)
-    print(f"{'RUN #':<8} | {'SEQUENTIAL (s)':<16} | {'PARALLEL (s)':<14} | {'SPEEDUP'}")
+    print(f"Queue Config: P1 = {p1_count} | P2 = {p2_count} | P3 = {p3_count} | Total = {total_students}")
     print("-" * 60)
     
+    # Table Header with strict widths
+    print(f"{'RUN #':<10} | {'SEQUENTIAL (s)':<16} | {'PARALLEL (s)':<14} | {'SPEEDUP':<10}")
+    print("-" * 60)
+    
+    # Table Rows with strictly enforced uniform widths
     for i in range(runs_for_average):
         run_speedup = seq_run_times[i] / par_run_times[i]
-        print(f"Run {i+1:<4} | {seq_run_times[i]:<16.4f} | {par_run_times[i]:<14.4f} | {run_speedup:.2f}x")
+        speedup_str = f"{run_speedup:.2f}x"
+        run_label = f"Run {i+1}"
+        
+        print(f"{run_label:<10} | {seq_run_times[i]:<16.4f} | {par_run_times[i]:<14.4f} | {speedup_str:<10}")
     
     print("-" * 60)
     print("AVERAGES:")
-    print(f"Sequential Avg Time: {time_sq:.4f} seconds")
-    print(f"Parallel Avg Time:   {time_pr:.4f} seconds")
+    print(f"{'Sequential Avg Time:':<23} {time_sq:.4f} seconds")
+    print(f"{'Parallel Avg Time:':<23} {time_pr:.4f} seconds")
     print("-" * 60)
-    print(f"OVERALL SPEEDUP RATIO: {speedup:.2f}x")
+    print(f"{'OVERALL SPEEDUP RATIO:':<23} {speedup:.2f}x")
     print("="*60 + "\n")

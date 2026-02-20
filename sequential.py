@@ -3,7 +3,7 @@ import teller as t
 
 
 
-def seqeuntial(grades, do_print):
+def sequential(grades, do_print):
     now = time.time()
     for student in grades:
         t.process_window1(student, do_print)

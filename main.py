@@ -2,7 +2,7 @@ import sequential as sq
 import parallel as pr
 
 grades = ["Alice", "Bob", "Charlie", "David", "Eve"]
-students = [f"Student {i}" for i in range(1, 20)]
+students = [f"Student {i}" for i in range(1, 16)]
 
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid")
-    time_sq = sq.seqeuntial(students, do_print)
+    time_sq = sq.sequential(students, do_print)
     time_pr = pr.parallel(students, do_print)
     speedup = time_sq / time_pr
 

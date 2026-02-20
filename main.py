@@ -65,6 +65,20 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid input. Please enter T or F.")
+            
+    # If logging is enabled and there are multiple runs, ask if they want to mute subsequent runs
+    mute_subsequent_runs = True
+    if enable_logging and runs_for_average > 1:
+        while True:
+            m = input("Mute detailed logging for subsequent runs to keep output clean (T/F)? ")
+            if m.lower() == 't':
+                mute_subsequent_runs = True
+                break
+            elif m.lower() == 'f':
+                mute_subsequent_runs = False
+                break
+            else:
+                print("Invalid input. Please enter T or F.")
 
     total_sq = 0
     total_pr = 0
@@ -83,10 +97,13 @@ if __name__ == "__main__":
         run_number = i + 1
         print(f"\n>>>>> STARTED BENCHMARK RUN {run_number} OF {runs_for_average} <<<<<")
         
-        # Only print the detailed logs for the first run if logging is enabled
-        log_this_run = enable_logging if i == 0 else False
+        # Determine if this specific run should print detailed logs
+        if enable_logging:
+            log_this_run = False if (mute_subsequent_runs and i > 0) else True
+        else:
+            log_this_run = False
         
-        if enable_logging and not log_this_run:
+        if enable_logging and mute_subsequent_runs and i > 0:
             print("(Detailed process logging muted for this run to keep output clean)")
         
         base_queue = generate_students(p1_count, p2_count, p3_count)
@@ -101,7 +118,7 @@ if __name__ == "__main__":
         total_pr += par_time
         par_run_times.append(par_time)
         
-        print(f">>>>> COMPLETED BENCHMARK RUN {run_number} <<<<<")
+        print(f">>>>> COMPLETED BENCHMARK RUN {run_number} <<<<<\n")
 
     time_sq = total_sq / runs_for_average
     time_pr = total_pr / runs_for_average
@@ -110,6 +127,8 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("                 PERFORMANCE SUMMARY                 ")
     print("="*60)
+    print(f"Queue Config: P1 = {p1_count} | P2 = {p2_count} | P3 = {p3_count} | Total = {total_students}")
+    print("-" * 60)
     print(f"{'RUN #':<8} | {'SEQUENTIAL (s)':<16} | {'PARALLEL (s)':<14} | {'SPEEDUP'}")
     print("-" * 60)
     

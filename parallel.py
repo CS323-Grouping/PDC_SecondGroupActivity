@@ -76,7 +76,7 @@ def parallel(initial_students, enable_logging):
 
     if enable_logging:
         logging.info("-" * 60)
-        logging.info(f"✔ Parallel Completed in {elapsed_time:.3f} seconds")
+        logging.info(f"Parallel Completed in {elapsed_time:.3f} seconds")
         logging.info("-" * 60)
 
     return elapsed_time

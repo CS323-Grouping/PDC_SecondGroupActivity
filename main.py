@@ -124,22 +124,31 @@ if __name__ == "__main__":
     time_pr = total_pr / runs_for_average
     speedup = time_sq / time_pr
 
+    # ==========================================
+    # FORMATTED UNIFORM PERFORMANCE SUMMARY TABLE
+    # ==========================================
     print("\n" + "="*60)
-    print("                 PERFORMANCE SUMMARY                 ")
+    print(f"{'PERFORMANCE SUMMARY':^60}")
     print("="*60)
     print(f"Queue Config: P1 = {p1_count} | P2 = {p2_count} | P3 = {p3_count} | Total = {total_students}")
     print("-" * 60)
-    print(f"{'RUN #':<8} | {'SEQUENTIAL (s)':<16} | {'PARALLEL (s)':<14} | {'SPEEDUP'}")
+    
+    # Table Header with strict widths
+    print(f"{'RUN #':<10} | {'SEQUENTIAL (s)':<16} | {'PARALLEL (s)':<14} | {'SPEEDUP':<10}")
     print("-" * 60)
     
+    # Table Rows with strictly enforced uniform widths
     for i in range(runs_for_average):
         run_speedup = seq_run_times[i] / par_run_times[i]
-        print(f"Run {i+1:<4} | {seq_run_times[i]:<16.4f} | {par_run_times[i]:<14.4f} | {run_speedup:.2f}x")
+        speedup_str = f"{run_speedup:.2f}x"
+        run_label = f"Run {i+1}"
+        
+        print(f"{run_label:<10} | {seq_run_times[i]:<16.4f} | {par_run_times[i]:<14.4f} | {speedup_str:<10}")
     
     print("-" * 60)
     print("AVERAGES:")
-    print(f"Sequential Avg Time: {time_sq:.4f} seconds")
-    print(f"Parallel Avg Time:   {time_pr:.4f} seconds")
+    print(f"{'Sequential Avg Time:':<23} {time_sq:.4f} seconds")
+    print(f"{'Parallel Avg Time:':<23} {time_pr:.4f} seconds")
     print("-" * 60)
-    print(f"OVERALL SPEEDUP RATIO: {speedup:.2f}x")
+    print(f"{'OVERALL SPEEDUP RATIO:':<23} {speedup:.2f}x")
     print("="*60 + "\n")

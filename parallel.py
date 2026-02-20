@@ -1,6 +1,6 @@
 import teller as t
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor
 
 
 def parallel(students, do_print):

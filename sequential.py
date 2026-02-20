@@ -6,7 +6,9 @@ import teller as t
 def seqeuntial(grades, do_print):
     now = time.time()
     for student in grades:
-        t.process_grade(student, do_print)
+        t.process_window1(student, do_print)
+        t.process_window2(student, do_print)
+        t.process_window3(student, do_print)
 
     end = time.time()
     taken = end - now

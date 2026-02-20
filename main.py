@@ -2,7 +2,7 @@ import sequential as sq
 import parallel as pr
 
 grades = ["Alice", "Bob", "Charlie", "David", "Eve"]
-students = [f"Student {i}" for i in range(1, 51)]
+students = [f"Student {i}" for i in range(1, 20)]
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from typing import List
 import teller as t
 
 
-def run_parallel(students: List[list], do_print: bool) -> float:
+def parallel(students: List[list], do_print: bool) -> float:
     """Execute teller windows in parallel and return execution time."""
 
     windows = (

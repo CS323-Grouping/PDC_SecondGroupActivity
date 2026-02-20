@@ -1,21 +1,40 @@
-import teller as t
 import time
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import List
+import teller as t
 
 
-def parallel(students, do_print):
-    now = time.time()
+def parallel(students: List[list], do_print: bool) -> float:
+    """Execute teller windows in parallel and return execution time."""
 
-    with ProcessPoolExecutor() as executor:
-        future_window1 = executor.submit(t.process_window1, students, do_print)
-        future_window2 = executor.submit(t.process_window2, students, do_print)
-        future_window3 = executor.submit(t.process_window3, students, do_print)
+    windows = (
+        t.process_window1,
+        t.process_window2,
+        t.process_window3,
+    )
 
-        _ = future_window1.result()
-        _ = future_window2.result()
-        _ = future_window3.result()
+    print("\n" + "=" * 50)
+    print("        PARALLEL PROCESSING STARTED")
+    print("=" * 50)
+    print(f"Processing {len(students)} students "
+          f"across {len(windows)} windows...\n")
 
-    end = time.time()
-    taken = end - now
-    print(f"Task Parallelism Ended in: {taken:.2f} seconds")
-    return taken
+    start_time = time.perf_counter()
+
+    with ProcessPoolExecutor(max_workers=len(windows)) as executor:
+        futures = [
+            executor.submit(window, students, do_print)
+            for window in windows
+        ]
+
+        for i, future in enumerate(as_completed(futures), start=1):
+            future.result()
+            print(f"✓ Window {i} finished")
+
+    elapsed_time = time.perf_counter() - start_time
+
+    print("\n" + "-" * 50)
+    print(f"✔ Completed in {elapsed_time:.2f} seconds")
+    print("-" * 50)
+
+    return elapsed_time

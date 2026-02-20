@@ -16,8 +16,8 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid")
-    time_sq = sq.seqeuntial(grades, do_print)
-    time_pr = pr.parallel(grades, do_print)
+    time_sq = sq.seqeuntial(students, do_print)
+    time_pr = pr.parallel(students, do_print)
     speedup = time_sq / time_pr
 
     print(f"Speedup {speedup}")

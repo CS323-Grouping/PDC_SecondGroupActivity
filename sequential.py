@@ -6,17 +6,16 @@ import teller as t
 def sequential(initial_students, enable_logging):
     if enable_logging:
         logging.info("=" * 60)
-        logging.info(" SEQUENTIAL PROCESSING STARTED (Single Bottleneck Queue)")
+        logging.info("SEQUENTIAL PROCESSING STARTED (Single Bottleneck Queue)")
         logging.info("=" * 60)
         
     start_time = time.perf_counter()
     
-    # Initialize the single massive queue
+    # Initialize the single queue
     queue = deque(initial_students)
     worker_name = "SingleWorker"
     
     while queue:
-        # Worker takes the first student in line
         student = queue.popleft()
         current_task = student["task"]
 

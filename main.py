@@ -4,7 +4,6 @@ import copy
 import sequential as sq
 import parallel as pr
 
-# Industry-standard logging setup
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s | %(message)s',
@@ -26,14 +25,13 @@ if __name__ == "__main__":
     print("          USTP REGISTRAR BENCHMARK CONFIGURATION")
     print("="*60)
     
-    # Display the context menu for the processes
     print("\n--- PROCESS CONTEXT ---")
     print("[P1] Request Phase   : Acknowledge form, price fee, send to external cashier.")
     print("[P2] Payment Phase   : Verify cashier receipt, issue releasing slip.")
     print("[P3] Releasing Phase : Receive releasing slip, hand out official grades.")
     print("-" * 60 + "\n")
     
-    # Safely get the number of runs
+    # Get the number of runs
     while True:
         try:
             runs_for_average = int(input("How many times to run for averaging? (e.g., 3 or 5): "))
@@ -44,7 +42,7 @@ if __name__ == "__main__":
             print("Invalid input. Please enter a valid number.")
 
     print("\n--- STUDENT QUEUE SETUP ---")
-    # Safely get the number of students for each queue
+    # Get the number of students for each queue
     while True:
         try:
             p1_count = int(input("Enter number of students starting at Window 1 (P1): "))
@@ -57,7 +55,6 @@ if __name__ == "__main__":
             print("Invalid input. Please enter valid numbers.")
 
     print("\n--- LOGGING SETUP ---")
-    # Get the logging preference
     while True:
         a = input("Show Processes Logging (T/F)? ")
         if a.lower() == "t":
@@ -73,7 +70,6 @@ if __name__ == "__main__":
     total_pr = 0
     total_students = p1_count + p2_count + p3_count
     
-    # Lists to store individual run times for the summary table
     seq_run_times = []
     par_run_times = []
 
@@ -87,36 +83,30 @@ if __name__ == "__main__":
         run_number = i + 1
         print(f"\n>>>>> STARTED BENCHMARK RUN {run_number} OF {runs_for_average} <<<<<")
         
-        # We only want to print the detailed logs for the first run if logging is enabled
-        # Otherwise, the terminal gets too messy during the test averages
+        # Only print the detailed logs for the first run if logging is enabled
         log_this_run = enable_logging if i == 0 else False
         
         if enable_logging and not log_this_run:
             print("(Detailed process logging muted for this run to keep output clean)")
         
-        # Generate fresh, deep-copied student lists for each run so the queue is clean
         base_queue = generate_students(p1_count, p2_count, p3_count)
         seq_queue = copy.deepcopy(base_queue)
         par_queue = copy.deepcopy(base_queue)
 
-        # Run Sequential and capture specific run time
         seq_time = sq.sequential(seq_queue, log_this_run)
         total_sq += seq_time
         seq_run_times.append(seq_time)
-        
-        # Run Parallel and capture specific run time
+
         par_time = pr.parallel(par_queue, log_this_run)
         total_pr += par_time
         par_run_times.append(par_time)
         
         print(f">>>>> COMPLETED BENCHMARK RUN {run_number} <<<<<")
 
-    # Calculate Benchmarks
     time_sq = total_sq / runs_for_average
     time_pr = total_pr / runs_for_average
     speedup = time_sq / time_pr
 
-    # Print clean summary with a real table
     print("\n" + "="*60)
     print("                 PERFORMANCE SUMMARY                 ")
     print("="*60)

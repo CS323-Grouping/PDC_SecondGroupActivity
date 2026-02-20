@@ -32,17 +32,16 @@ def worker_3(q_in, enable_logging):
             break
             
         t.process_window3(student["name"], enable_logging, "Window 3")
-        # Transaction complete, student exits
 
 def parallel(initial_students, enable_logging):
     if enable_logging:
         logging.info("=" * 60)
-        logging.info(" PARALLEL PROCESSING STARTED (3 Independent Windows)")
+        logging.info("PARALLEL PROCESSING STARTED (3 Independent Windows)")
         logging.info("=" * 60)
 
     start_time = time.perf_counter()
 
-    # Create safe communication queues between processes
+    # Create communication queues between processes
     q1, q2, q3 = mp.Queue(), mp.Queue(), mp.Queue()
 
     # Pre-populate queues based on where students are starting
@@ -54,7 +53,6 @@ def parallel(initial_students, enable_logging):
         elif student["task"] == "P3":
             q3.put(student)
 
-    # Put a sentinel in Queue 1 to tell Window 1 when the initial line is finished
     q1.put(None)
 
     # Initialize the worker processes
